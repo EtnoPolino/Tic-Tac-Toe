@@ -1,0 +1,50 @@
+header,
+footer{
+    text-align: center;
+}
+
+main{
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    margin-top: 100px;
+    margin-bottom: 50px;
+}
+
+main > section:first-child,
+main > section:last-child{
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+main > section > form > button,
+footer > button{
+    margin-top: 20px;
+    padding: 5px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+input[type=text]{
+    padding: 5px;
+    border-radius: 5px;
+}
+
+/*------------------- border ------------------------------*/
+.gamegrid{
+    border: 1px solid black;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    width: 400px;
+    height: 400px;
+    margin: 0;
+    padding: 0;
+    align-self: center;
+    justify-self: center;
+}
+
+.square{
+    border: 1px solid black;
+}
