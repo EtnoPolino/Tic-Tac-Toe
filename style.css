@@ -47,4 +47,9 @@ input[type=text]{
 
 .square{
     border: 1px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 600;
 }
