@@ -59,32 +59,6 @@ const displayController = (function(){
 
 
 
-
-/**
- * si valeur de la target que j'appuie est vide 
- * 
- */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*---------------------------------------------------------------------------*/
 const gridboard = ["0", "1", "2",
                    "3", "4", "5",
@@ -94,7 +68,7 @@ const gridboard = ["0", "1", "2",
                    
 
 
-const winningCondition = [
+const winPossibilities = [
     [0, 1, 2],
     [3, 4, 5],
     [6, 7, 8],
@@ -105,9 +79,11 @@ const winningCondition = [
     [2, 4, 6],
 ];
 
-winningCondition.forEach((item, index) =>{
+/*
+winPossibilities.forEach((item, index) =>{
     log(`${index} : ${item}`);
 })
+
 
 const equalsIgnoreOder = function(a, b){
     if(a.length != b.length) return false;
@@ -121,11 +97,12 @@ const equalsIgnoreOder = function(a, b){
 }
 
 let table = [];
-for(let i = 0; i < winningCondition.length; i++){
-    table[i] = equalsIgnoreOder(winningCondition[i], [0, 8, 4, 8]);
+for(let i = 0; i < winPossibilities.length; i++){
+    table[i] = equalsIgnoreOder(winPossibilities[i], [0, 8, 4]);
 }
 
-
+log(table)
+*/
 
 
 
@@ -137,88 +114,135 @@ for(let i = 0; i < winningCondition.length; i++){
 
 
 
+const squareGrid = document.querySelectorAll('.square');
+const player1 = Player('Player 1', 'X');
+const player2 = Player('Player 2', 'O');
+let activePlayer = 0;
+let players = [player1.getSigne(), player2.getSigne()]
+
+const Xres = [];
+const Ores = [];
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*---------------- le joueur --------------------------*/
-
-
-
-const players_1 = Player('Player 1', 'X');
-const players_2 = Player('Player 2', 'O');
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-const divSquare = document.querySelectorAll('.square');
-
-divSquare.forEach(divSquare => {
-    divSquare.addEventListener('click', display_input)
-})
-
-function display_input(event){    
-    log(event.target.dataset.square)
+function game(){
+    for(let i = 0; i < squareGrid.length; i++){
+        squareGrid[i].addEventListener('click', changeTurn);
+    }
 }
 
-
-/*-------------- How to switch players when we click --------------*/ 
-/*let playerId = 1;
-let turn = 0;
-
-function display_input(event){
+function changeTurn(squareChosen){ 
+    let squareClickedId = squareChosen.target.dataset.square;
+    const squareClicked = document.getElementById(squareClickedId)
     
- const divClicked = document.getElementById(square)
 
-    turn++;
-
-    if(playerId == 1){
-        if(divClicked.innerText.includes('X') || divClicked.innerText.includes('O')){
-            return;
+    
+    /*--- check for the win logic --- */
+    function checkWin(arg){
+        if(arg == 'X'){
+            Xres.push(squareClickedId);
         }else{
-            divClicked.innerHTML = 'X';
-            playerId = 2;
-        } 
-    }else if(playerId == 2){
-        if(divClicked.innerText.includes('X') || divClicked.innerText.includes('O')){
-            return;
-        }else{
-            divClicked.innerHTML = 'O';
-            playerId = 1;
+            Ores.push(squareClickedId);
         }
     }
-    
-    if(turn == 9){
-        alert('END OF GAME');
+        
+        /*
+        winPossibilities.forEach((wCondition) => {
+            if(wCondition.every(item => (Xres.includes(item)))){
+                log(Xres);
+                log('WINNER X');
+            }
+            if(wCondition.every(item => (Ores.includes(item)))){
+                log(Ores);
+                log('WINNER Y');
+            }
+        }); */
+
+
+
+       /* winningPossibilities.forEach( (possibilitie) =>{
+            if(possibilitie.every( (arg) =>{
+                Xres.includes(arg)
+            })){
+                alert('Winner')
+            }
+
+            if(possibilitie.every( (arg) =>{
+                Ores.includes(arg)
+            })){
+                alert('Winner')
+            }
+        }) */
+
+    /*--------------------------------*/
+ 
+    if(activePlayer == 0){
+        if(squareClicked.innerText.includes('X') || squareClicked.innerText.includes('O')){
+            return;
+        }else{
+            squareClicked.innerText = players[activePlayer];
+            checkWin(players[activePlayer]);
+            activePlayer = 1  
+        }
+    }else{
+        if(squareClicked.innerText.includes('X') || squareClicked.innerText.includes('O')){
+            return;
+        }else{
+            squareClicked.innerText = players[activePlayer];
+            checkWin(players[activePlayer]);
+            activePlayer = 0;   
+        }
     }
-    log('le prochain à jouer est player : '+playerId);
-    log(turn); 
+
 }
-*/
+
+/*-----------------------------------------------------------------------------------------------------------------------------------------------*/
+
+
+const arrayTotal = [4, 2, 1, 5, 8];
+
+let combinationArray = [];
+
+arrayTotal.sort();
+
+
+for (let i = 0; i < (arrayTotal.length - 2); i++) {
+
+  for (let j = (i + 1); j < (arrayTotal.length - 1); j++) {
+
+    for (let k = (j + 1); k < arrayTotal.length; k++) {
+
+      combinationArray.push([arrayTotal[i], arrayTotal[j], arrayTotal[k]])
+    }
+  }
+}
+ console.log(combinationArray);
+
+const a = [1, 2, 3, 5];
+const b = [1, 2, 3, 5];
+let result = false
+
+function isEqual(a, b){
+    // If length is not equal
+    if(a.length!=b.length)
+     return result;
+    else{
+     
+    // Comparing each element of array
+     for(let i=0;i<a.length;i++)
+     if(a[i]!=b[i])
+      return result;
+      return !result;
+    }
+}
+
+
+
+for(let i = 0; i < winPossibilities.length; i++){
+    for(let j = 0; j <combinationArray.length; j++){
+        if(isEqual(winPossibilities[i], combinationArray[j]) == true){
+            log('HOURRAH');
+            log(`(${i} : ${winPossibilities[i]}), (${j} : ${combinationArray[j]})`)
+            break;
+        };
+    }
+}
