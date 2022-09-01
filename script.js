@@ -1,9 +1,11 @@
 /* debut 30/08/2022 à 11h03 - 11h47    https://www.google.com/search?client=firefox-b-e&q=switch+players+js 
-https://github.com/garyarzuma
+https://github.com/garyarzuma/Tic-Tac-Toe
 https://garyarzuma.github.io/Tic-Tac-Toe/ */
 
 const log = console.log;
 const logT = console.table;
+
+
 
 /*-----------------------------------------------------------------------*/
 
@@ -22,49 +24,46 @@ const Player = function(name, signe){
 }
 
 
-const displayController = function(){
-   /* 
-    const okSubmit_1 = document.querySelector('.left > form > button');
-    const okSubmit_2 = document.querySelector('.right > form > button'); */
+const displayController = (function(){
 
     const okSubmit = document.querySelectorAll('button[type=submit');
-
-    const form = document.querySelector('form');
     const playerLabel1 = document.querySelector('.player1');
     const playerLabel2 = document.querySelector('.player2');
-    const inputPlayer1 = document.querySelector('#player1');
-    const inputPlayer2 = document.querySelector('#player2');
 
     const player1 = Player('Player 1', 'X');
     const player2 = Player('Player 2', 'O');
 
-
-    okSubmit.forEach(ok =>{
-        ok.addEventListener('click', test)
-    })
-
- /*   okSubmit_1.addEventListener('click',test)
-    okSubmit_2.addEventListener('click',test) */
-    
     function test(e){
         e.preventDefault();
-        log(e.target.form[0].name)
+        const playerName = e.target.form[0].name;
 
-     /*   if(inputPlayer1.value != ''){
-            playerLabel1.innerText = `HELLO 1`;
+        if(playerName === 'player1' && e.target.form[0].value != ''){
+            player1.setName(`${e.target.form[0].value}`)
+            e.target.form.reset();
         }
-        if(inputPlayer2.value != ''){
-            playerLabel2.innerText = `HELLO 2`;
-        } */
+        
+        if(playerName === 'player2' && e.target.form[0].value != ''){
+            player2.setName(`${e.target.form[0].value}`)
+            e.target.form.reset();
+        }
+
+        playerLabel1.innerText = player1.getName();
+        playerLabel2.innerText = player2.getName();
     }
-}
+    
+    okSubmit.forEach(ok =>{
+        ok.addEventListener('click', test)
+    });
+
+})();
 
 
-displayController();
 
 
-
-
+/**
+ * si valeur de la target que j'appuie est vide 
+ * 
+ */
 
 
 
