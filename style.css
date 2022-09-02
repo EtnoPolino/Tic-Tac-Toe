@@ -1,12 +1,17 @@
 header,
-footer{
+footer,
+article{
     text-align: center;
+}
+
+article{
+    margin-top: 50px;
 }
 
 main{
     display: grid;
     grid-template-columns: 1fr 2fr 1fr;
-    margin-top: 100px;
+    margin-top: 50px;
     margin-bottom: 50px;
 }
 
