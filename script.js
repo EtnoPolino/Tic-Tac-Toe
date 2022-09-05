@@ -1,12 +1,3 @@
-/* debut 30/08/2022 à 11h03 - 11h47    https://www.google.com/search?client=firefox-b-e&q=switch+players+js 
-https://github.com/garyarzuma/Tic-Tac-Toe
-https://garyarzuma.github.io/Tic-Tac-Toe/ */
-
-const log = console.log;
-const logT = console.table;
-
-/*-----------------------------------------------------------------------*/
-
 const Player = function(name, signe){
     const setName = function(newName){
         name = newName;
@@ -22,105 +13,15 @@ const Player = function(name, signe){
 }
 
 
-const player1 = Player('Player 1', 'X');
-const player2 = Player('Player 2', 'O');
-
-
-const Gameboard = (function(){
-
-    const winPossibilities = [
-        [0, 1, 2],
-        [3, 4, 5],
-        [6, 7, 8],
-        [0, 3, 6],
-        [1, 4, 7],
-        [2, 5, 8],
-        [0, 4, 8],
-        [2, 4, 6],
-    ];
-
-    const squareGrid = document.querySelectorAll('.square');
-    const playerTurn = document.querySelector('article > span');
-    let players = [player1.getSigne(), player2.getSigne()];
-    let activePlayer = 0;
-
-    const Xres = [];
-    const Ores = [];
-
-
-    const checkWin = function(arg, squareId){
-        let isMarkWinning;
-    
-        if(arg == 'X'){
-            Xres.push(squareId);
-            isMarkWinning = Module.compareWinPossibilityToXOresult(winPossibilities, Xres);
-            if(isMarkWinning == true){
-                return true;
-            }            
-        }else{
-            Ores.push(squareId);
-            isMarkWinning = Module.compareWinPossibilityToXOresult(winPossibilities, Ores);
-            if(isMarkWinning == true){
-                return true;
-            }
-        }
-    }
-
-    const changeTurn = function(e){
-        let squareClickedId = e.target.dataset.square;
-        const squareClicked = document.getElementById(squareClickedId)
-        
-        if(activePlayer == 0){
-            if(squareClicked.innerText.includes('X') || squareClicked.innerText.includes('O')){
-                return;
-            }else{
-                squareClicked.innerText = players[activePlayer];
-                checkWin(players[activePlayer], squareClickedId);
-                if(checkWin(players[activePlayer], squareClickedId)){
-                    for(let i = 0; i < squareGrid.length; i++){
-                        squareGrid[i].removeEventListener('click', changeTurn);
-                        playerTurn.innerText = `${player1.getName()} WON`;
-                    }
-                }else{
-                    playerTurn.innerText = `${player2.getName()} turn`;
-                    activePlayer = 1; 
-                }               
-            }
-        }else{
-            if(squareClicked.innerText.includes('X') || squareClicked.innerText.includes('O')){
-                return;
-            }else{
-                squareClicked.innerText = players[activePlayer];
-                checkWin(players[activePlayer], squareClickedId);
-                if(checkWin(players[activePlayer], squareClickedId)){
-                    for(let i = 0; i < squareGrid.length; i++){
-                        squareGrid[i].removeEventListener('click', changeTurn);
-                        playerTurn.innerText = `${player2.getName()} WON`;
-                    }
-                }else{
-                    playerTurn.innerText = `${player1.getName()} turn`;
-                    activePlayer = 0; 
-                }    
-            }
-        }
-    }
-
-    for(let i = 0; i < squareGrid.length; i++){
-        squareGrid[i].addEventListener('click', changeTurn);
-    }
-
-})();
-
-
-
 const displayController = (function(){
+    const player1 = Player('Player 1', 'X');
+    const player2 = Player('Player 2', 'O');
 
     const okSubmit = document.querySelectorAll('button[type=submit');
     const playerLabel1 = document.querySelector('.player1');
     const playerLabel2 = document.querySelector('.player2');
-    
 
-    function test(e){
+    const _setPlayersName = function(e){
         e.preventDefault();
         const playerName = e.target.form[0].name;
 
@@ -140,15 +41,124 @@ const displayController = (function(){
     
 
     okSubmit.forEach(ok =>{
-        ok.addEventListener('click', test)
+        ok.addEventListener('click', _setPlayersName);
     });
 
+    return{player1, player2}
 })();
 
 
+const Gameboard = (function(){
+
+    const winPossibilities = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6],
+    ];
+
+    const squareGrid = document.querySelectorAll('.square');
+    const resetButton = document.querySelector('footer > button');
+    const playerTurn = document.querySelector('article > span');
+    let players = [displayController.player1.getSigne(), displayController.player2.getSigne()];
+
+    let activePlayer = 0;
+    let round = 0;
+
+    let Xres = [];
+    let Ores = [];
 
 
-/*-----------------------------------------------------------------------------------------------------------------------------------------------*/
+    const _checkWin = function(arg, squareId){
+        let isMarkWinning;
+    
+        if(arg == 'X'){
+            Xres.push(squareId);
+            isMarkWinning = Module.compareWinPossibilityToXOresult(winPossibilities, Xres);
+            if(isMarkWinning == true){
+                return true;
+            }            
+        }else{
+            Ores.push(squareId);
+            isMarkWinning = Module.compareWinPossibilityToXOresult(winPossibilities, Ores);
+            if(isMarkWinning == true){
+                return true;
+            }
+        }
+    }
+
+    const _changeTurn = function(e){
+        let squareClickedId = e.target.dataset.square;
+        const squareClicked = document.getElementById(squareClickedId)
+        
+        if(activePlayer == 0){
+            if(squareClicked.innerText.includes('X') || squareClicked.innerText.includes('O')){
+                return;
+            }else{
+                squareClicked.innerText = players[activePlayer];
+                _checkWin(players[activePlayer], squareClickedId);
+                if(_checkWin(players[activePlayer], squareClickedId)){
+                    for(let i = 0; i < squareGrid.length; i++){
+                        squareGrid[i].removeEventListener('click', _changeTurn);
+                        playerTurn.innerText = `${displayController.player1.getName()} WON`;
+                    }
+                }else{
+                    playerTurn.innerText = `${displayController.player2.getName()} turn`;
+                    activePlayer = 1;
+                    round++; 
+                }               
+            }
+        }else{
+            if(squareClicked.innerText.includes('X') || squareClicked.innerText.includes('O')){
+                return;
+            }else{
+                squareClicked.innerText = players[activePlayer];
+                _checkWin(players[activePlayer], squareClickedId);
+                if(_checkWin(players[activePlayer], squareClickedId)){
+                    for(let i = 0; i < squareGrid.length; i++){
+                        squareGrid[i].removeEventListener('click', _changeTurn);
+                        playerTurn.innerText = `${displayController.player2.getName()} WON`;
+                    }
+                }else{
+                    playerTurn.innerText = `${displayController.player1.getName()} turn`;
+                    activePlayer = 0;
+                    round++; 
+                }    
+            }
+        }
+
+        if(round == 9 && (!Module.compareWinPossibilityToXOresult(winPossibilities, Xres) || !Module.compareWinPossibilityToXOresult(winPossibilities, Ores))){
+            playerTurn.innerText = `DRAW`;
+            return;
+        }
+    }
+  
+    const _resetAll = function(){
+        round = 0;
+        activePlayer = 0
+        Xres = [];
+        Ores = [];
+        squareGrid.forEach(square =>{
+            square.innerText = '';
+        });
+        for(let i = 0; i < squareGrid.length; i++){
+            squareGrid[i].addEventListener('click', _changeTurn);
+        };
+    }
+
+
+    for(let i = 0; i < squareGrid.length; i++){
+        squareGrid[i].addEventListener('click', _changeTurn);
+    }
+
+    resetButton.addEventListener('click', _resetAll);
+
+})();
+
 
 const Module = (function(){
     let isArrayEqual = false;  
@@ -191,15 +201,3 @@ const Module = (function(){
 
     return {compareWinPossibilityToXOresult}
 })();
-
-
-
-
-
-
-/* -------------------------------------Reset the Game------------------------------------------ */
-
-const resetButton = document.querySelectorAll('footer > button');
-/*
-resetButton.addEventListener('click', resetAll()); */
-
